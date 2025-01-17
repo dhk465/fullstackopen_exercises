@@ -6,16 +6,6 @@ const ScoreButton = ({increaseScore, text}) => {
   );
 };
 
-const Feedback = () => {
-  return (
-    <>
-      <h1>
-        give feedback
-      </h1>
-    </>
-  );
-};
-
 const Opinion = ({score, text}) => {
   return (
     <p>
@@ -39,21 +29,24 @@ const Calculate = ({scores}) => {
         all {sum}
       </p>
       <p>
-        average {(sum == 0) ? 0 : (weightedTotal / sum)}
+        average {weightedTotal / sum}
       </p>
       <p>
-        positive {(sum == 0) ? 0 : (scores[0] / sum * 100)}%
+        positive {scores[0] / sum * 100}%
       </p>
     </>
   );
 };
 
 const Statistics = ({good, neutral, bad}) => {
-  return (
+  return (good + neutral + bad < 1) ? (
     <>
-      <h1>
-        statistics
-      </h1>
+      <p>
+        No feedback given
+      </p>
+    </>
+  ) : (
+    <>
       <Opinion score={good} text='good'/>
       <Opinion score={neutral} text='neutral'/>
       <Opinion score={bad} text='bad'/>
@@ -74,10 +67,11 @@ const App = () => {
 
   return (
     <>
-      <Feedback />
+      <h1>give feedback</h1>
       <ScoreButton increaseScore={increaseScore(setGood)} text='good'/>
       <ScoreButton increaseScore={increaseScore(setNeutral)} text='neutral'/>
       <ScoreButton increaseScore={increaseScore(setBad)} text='bad'/>
+      <h1>statistics</h1>
       <Statistics good={good} neutral={neutral} bad={bad}/>
     </>
   );
