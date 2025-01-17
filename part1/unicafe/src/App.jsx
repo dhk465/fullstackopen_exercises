@@ -16,11 +16,35 @@ const Feedback = () => {
   );
 };
 
-const Part = ({score, text}) => {
+const Opinion = ({score, text}) => {
   return (
     <p>
       {text} {score}
     </p>
+  );
+};
+
+const Calculate = ({scores}) => {
+  let sum = 0;
+
+  scores.forEach(score => {
+    sum += score;
+  });
+
+  let weightedTotal = scores[0] + (scores[2] * -1);
+  
+  return (
+    <>
+      <p>
+        all {sum}
+      </p>
+      <p>
+        average {(sum == 0) ? 0 : (weightedTotal / sum)}
+      </p>
+      <p>
+        positive {(sum == 0) ? 0 : (scores[0] / sum * 100)}%
+      </p>
+    </>
   );
 };
 
@@ -30,9 +54,10 @@ const Statistics = ({good, neutral, bad}) => {
       <h1>
         statistics
       </h1>
-      <Part score={good} text='good'/>
-      <Part score={neutral} text='neutral'/>
-      <Part score={bad} text='bad'/>
+      <Opinion score={good} text='good'/>
+      <Opinion score={neutral} text='neutral'/>
+      <Opinion score={bad} text='bad'/>
+      <Calculate scores={[good, neutral, bad]}/>
     </>
   );
 };
