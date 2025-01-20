@@ -8,10 +8,15 @@ const ScoreButton = ({increaseScore, text}) => {
 
 const StatisticLine = ({scores, text}) => {
   return (
-    <p>
-      {text} {scores}
-      {text === 'positive' ? '%' : ''}
-    </p>
+    <tr>
+      <td>
+        {text}
+      </td>
+      <td>
+        {scores}
+        {text === 'positive' ? '%' : ''}
+      </td>
+    </tr>
   );
 };
 
@@ -24,12 +29,16 @@ const Statistics = ({ good, neutral, bad }) => {
     <p>No feedback given</p>
   ) : (
     <>
-      <StatisticLine scores={good} text="good" />
-      <StatisticLine scores={neutral} text="neutral" />
-      <StatisticLine scores={bad} text="bad" />
-      <StatisticLine scores={sum} text="all" />
-      <StatisticLine scores={average} text="average" />
-      <StatisticLine scores={positivePercentage} text="positive" />
+      <table>
+        <tbody>
+          <StatisticLine scores={good} text="good" />
+          <StatisticLine scores={neutral} text="neutral" />
+          <StatisticLine scores={bad} text="bad" />
+          <StatisticLine scores={sum} text="all" />
+          <StatisticLine scores={average} text="average" />
+          <StatisticLine scores={positivePercentage} text="positive" />
+        </tbody>
+      </table>
     </>
   );
 };
