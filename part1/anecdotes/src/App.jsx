@@ -21,6 +21,16 @@ const NextButton = ({ onClick }) => {
   );
 };
 
+const TopVote = ({ anecdote, votes }) => {
+  return (
+    <>
+      <h1>Anecdote with most votes</h1>
+      <p>{anecdote}</p>
+      <p>has {votes} votes</p>
+    </>
+  );
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -49,11 +59,19 @@ const App = () => {
     console.log(copy);
   };
 
+  const findTopVote = () => {
+    const voteValues = Object.values(votes);
+    const maxVotes = Math.max(...voteValues);
+    const index = voteValues.indexOf(maxVotes);
+    return index;
+  };
+
   return (
     <>
       <AnecdoteDisplay anecdote={anecdotes[selected]} votes={votes[selected]} />
       <VoteButton onClick={vote(selected)} />
       <NextButton onClick={() => setSelected(getRandomInt(anecdotes.length))} />
+      <TopVote anecdote={anecdotes[findTopVote()]} votes={votes[findTopVote()]} />
     </>
   );
 };
