@@ -6,51 +6,30 @@ const ScoreButton = ({increaseScore, text}) => {
   );
 };
 
-const Opinion = ({score, text}) => {
+const StatisticLine = ({scores, text}) => {
   return (
     <p>
-      {text} {score}
+      {text} {scores}
+      {text === 'positive' ? '%' : ''}
     </p>
   );
 };
 
-const Calculate = ({scores}) => {
-  let sum = 0;
+const Statistics = ({ good, neutral, bad }) => {
+  const sum = good + neutral + bad;
+  const average = sum ? (good - bad) / sum : 0;
+  const positivePercentage = sum ? (good / sum) * 100 : 0;
 
-  scores.forEach(score => {
-    sum += score;
-  });
-
-  let weightedTotal = scores[0] + (scores[2] * -1);
-  
-  return (
-    <>
-      <p>
-        all {sum}
-      </p>
-      <p>
-        average {weightedTotal / sum}
-      </p>
-      <p>
-        positive {scores[0] / sum * 100}%
-      </p>
-    </>
-  );
-};
-
-const Statistics = ({good, neutral, bad}) => {
-  return (good + neutral + bad < 1) ? (
-    <>
-      <p>
-        No feedback given
-      </p>
-    </>
+  return sum < 1 ? (
+    <p>No feedback given</p>
   ) : (
     <>
-      <Opinion score={good} text='good'/>
-      <Opinion score={neutral} text='neutral'/>
-      <Opinion score={bad} text='bad'/>
-      <Calculate scores={[good, neutral, bad]}/>
+      <StatisticLine scores={good} text="good" />
+      <StatisticLine scores={neutral} text="neutral" />
+      <StatisticLine scores={bad} text="bad" />
+      <StatisticLine scores={sum} text="all" />
+      <StatisticLine scores={average} text="average" />
+      <StatisticLine scores={positivePercentage} text="positive" />
     </>
   );
 };
