@@ -3,12 +3,11 @@ import DisplayContacts from './components/DisplayContacts';
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', id: 1 },
+    { name: "Arto Hellas", id: 1 },
   ]);
-  const [newName, setNewName] = useState('');
+  const [newName, setNewName] = useState("");
 
-  const addPerson = (event) => {
-    event.preventDefault();
+  const addPerson = () => {
     const personObject = {
       name: newName,
       id: persons.length + 1,
@@ -21,10 +20,20 @@ const App = () => {
     setNewName(event.target.value);
   }
 
+  const validateName = (event) => {
+    event.preventDefault();
+    const nameList = persons.filter(person => person.name === newName);
+    if (nameList.length > 0) {
+      alert(`${newName} has already been added to the phonebook`);
+    } else {
+      addPerson(event);
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addPerson}>
+      <form onSubmit={validateName}>
         <div>
           name: <input value={newName} onChange={handleNameChange}/>
         </div>
