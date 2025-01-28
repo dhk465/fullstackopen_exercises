@@ -3,8 +3,13 @@ import DisplayContacts from './components/DisplayContacts';
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: "Arto Hellas", id: 1 , number: "040-123456" },
+    { name: 'Arto Hellas', number: '040-123456', id: 1 },
+    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
+    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
+    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
   ]);
+
+  const [searchValue, setSearchValue] = useState("");
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
 
@@ -19,6 +24,10 @@ const App = () => {
     setNewNumber('');
   };
 
+  const handleValueChange = (event) => {
+    setSearchValue(event.target.value);
+  };
+
   const handleNameChange = (event) => {
     setNewName(event.target.value);
   };
@@ -29,8 +38,8 @@ const App = () => {
 
   const validateName = (event) => {
     event.preventDefault();
-    const nameList = persons.filter(person => person.name === newName);
-    if (nameList.length > 0) {
+    const nameExists = persons.some(person => person.name === newName);
+    if (nameExists) {
       alert(`${newName} has already been added to the phonebook`);
     } else {
       addPerson(event);
@@ -39,7 +48,10 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <h2>Search</h2>
+        filter shown with <input value={searchValue} onChange={handleValueChange}/>
+      <h2>Add a new contact</h2>
       <form onSubmit={validateName}>
         <div>
           name: <input value={newName} onChange={handleNameChange}/>
@@ -52,7 +64,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      <DisplayContacts persons={persons} />
+      <DisplayContacts persons={persons} filterKeyword={searchValue}/>
     </div>
   );
 };
