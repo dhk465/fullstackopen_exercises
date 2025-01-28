@@ -7,7 +7,9 @@ const DisplayContacts = ({ persons, filterKeyword }) => {
           );
         }).map(person => {
           return (
-            <li key={person.id}>{person.name} {person.number}</li>
+            <li key={person.id}>
+              {person.name} {person.number}
+            </li>
           );
         })}
     </ul>
