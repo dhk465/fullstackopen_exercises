@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import contactService from './services/person';
 import Filter from './components/Filter';
 import DisplayContacts from './components/DisplayContacts';
 import NewContactForm from './components/NewContactForm';
@@ -11,14 +11,13 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
 
   const hook = () => {
-    axios
-      .get('http://localhost:3001/persons') // first, get the data from the server
-      .then(response => { // then, set the data to the state
-        setPersons(response.data);
+    contactService.getAll()
+      .then(initialContacts => {
+        setPersons(initialContacts);
       });
   };
 
-  useEffect(hook, []); // call the hook function only once
+  useEffect(hook, []);
 
   const addPerson = () => {
     const personObject = {
@@ -27,10 +26,9 @@ const App = () => {
       number: newNumber,
     };
 
-    axios
-      .post(`http://localhost:3001/persons`, personObject)
-      .then(response => {
-        setPersons(persons.concat(response.data));
+    contactService.create(personObject)
+      .then(newPerson => {
+        setPersons(persons.concat(newPerson));
       });
 
     setNewName('');
