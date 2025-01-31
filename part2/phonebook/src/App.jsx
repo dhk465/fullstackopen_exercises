@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import contactService from './services/person';
+import countService from './services/allTimeContactCount';
 import Filter from './components/Filter';
 import DisplayContacts from './components/DisplayContacts';
 import NewContactForm from './components/NewContactForm';
@@ -11,28 +12,33 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
 
   const hook = () => {
-    contactService.getAll()
+    contactService.getAllContacts()
       .then(initialContacts => {
         setPersons(initialContacts);
-      });
+      }); 
   };
 
   useEffect(hook, []);
 
   const addPerson = () => {
-    const personObject = {
-      name: newName,
-      id: (persons.length + 1).toString(),
-      number: newNumber,
-    };
-
-    contactService.create(personObject)
-      .then(newPerson => {
-        setPersons(persons.concat(newPerson));
-      });
-
+    countService.updateCount()
+      .then(updatedCount => { 
+        const personObject = {
+          name: newName,
+          id: updatedCount,
+          number: newNumber,
+        };
+        contactService.createContact(personObject)
+          .then(newPerson => {
+            setPersons(persons.concat(newPerson));
+          });
+    });
     setNewName('');
     setNewNumber('');
+  };
+
+  const removePerson = () => {
+    
   };
 
   const handleValueChange = (event) => {
@@ -74,7 +80,8 @@ const App = () => {
       <h2>Numbers</h2>
       <DisplayContacts
         persons={persons}
-        filterKeyword={searchValue} />
+        filterKeyword={searchValue} 
+        removePerson={removePerson}/>
     </div>
   );
 };
