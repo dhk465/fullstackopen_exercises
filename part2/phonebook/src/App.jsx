@@ -35,6 +35,18 @@ const App = () => {
     setNewNumber('');
   };
 
+  const removePerson = (id) => {
+    const personToDelete = persons.find(person => person.id === id);
+    const confirm = window.confirm(`Delete ${personToDelete.name} ?`);
+    
+    if (confirm) {
+      contactService.deleteContact(id)
+      .then(returnedData => {
+        setPersons(persons.filter(person => person.id != returnedData.id));
+      });
+    }
+  };
+
   const handleValueChange = (event) => {
     setSearchValue(event.target.value);
   };
@@ -74,7 +86,8 @@ const App = () => {
       <h2>Numbers</h2>
       <DisplayContacts
         persons={persons}
-        filterKeyword={searchValue} />
+        filterKeyword={searchValue}
+        removePerson={removePerson}/>
     </div>
   );
 };

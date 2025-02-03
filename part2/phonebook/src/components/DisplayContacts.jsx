@@ -1,4 +1,4 @@
-const DisplayContacts = ({ persons, filterKeyword }) => {
+const DisplayContacts = ({ persons, filterKeyword, removePerson }) => {
   return (
     <ul>
       {persons.filter(person => {
@@ -9,6 +9,7 @@ const DisplayContacts = ({ persons, filterKeyword }) => {
           return (
             <li key={person.id}>
               {person.name} {person.number}
+              <button type="submit" onClick={() => removePerson(person.id)}>delete</button>
             </li>
           );
         })}
