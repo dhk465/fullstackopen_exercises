@@ -9,28 +9,38 @@ const App = () => {
   const [searchValue, setSearchValue] = useState("");
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+  const [newId, setNewId] = useState(0);
 
   const hook = () => {
     contactService.getAll()
       .then(initialContacts => {
         setPersons(initialContacts);
+
+        // Get the highest id in the list of contacts for a unique new id
+        let highestId = initialContacts.reduce((max, contact) => {
+          let id = Number(contact.id);
+          return (id > max ? id : max)
+        }, 0);
+        setNewId(highestId + 1);
       });
   };
 
   useEffect(hook, []);
 
   const addPerson = () => {
+
     const personObject = {
       name: newName,
-      id: (persons.length + 1).toString(),
+      id: String(newId + 1),
       number: newNumber,
     };
-
+    
     contactService.create(personObject)
       .then(newPerson => {
         setPersons(persons.concat(newPerson));
       });
 
+    setNewId(newId + 1);
     setNewName('');
     setNewNumber('');
   };
