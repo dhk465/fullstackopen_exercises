@@ -8,8 +8,8 @@ const DisplayContacts = ({ persons, filterKeyword, removePerson }) => {
         }).map(person => {
           return (
             <li key={person.id}>
-              {person.name} {person.number} 
-              <button onClick={() => removePerson(person.id)}>delete</button>
+              {person.name} {person.number}
+              <button type="submit" onClick={() => removePerson(person.id)}>delete</button>
             </li>
           );
         })}

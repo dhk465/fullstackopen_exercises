@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import contactService from './services/person';
-import countService from './services/allTimeContactCount';
 import Filter from './components/Filter';
 import DisplayContacts from './components/DisplayContacts';
 import NewContactForm from './components/NewContactForm';
@@ -10,35 +9,52 @@ const App = () => {
   const [searchValue, setSearchValue] = useState("");
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+  const [newId, setNewId] = useState(0);
 
   const hook = () => {
-    contactService.getAllContacts()
+    contactService.getAll()
       .then(initialContacts => {
         setPersons(initialContacts);
-      }); 
+
+        // Get the highest id in the list of contacts for a unique new id
+        let highestId = initialContacts.reduce((max, contact) => {
+          let id = Number(contact.id);
+          return (id > max ? id : max)
+        }, 0);
+        setNewId(highestId + 1);
+      });
   };
 
   useEffect(hook, []);
 
   const addPerson = () => {
-    countService.updateCount()
-      .then(updatedCount => { 
-        const personObject = {
-          name: newName,
-          id: updatedCount,
-          number: newNumber,
-        };
-        contactService.createContact(personObject)
-          .then(newPerson => {
-            setPersons(persons.concat(newPerson));
-          });
-    });
+
+    const personObject = {
+      name: newName,
+      id: String(newId + 1),
+      number: newNumber,
+    };
+    
+    contactService.create(personObject)
+      .then(newPerson => {
+        setPersons(persons.concat(newPerson));
+      });
+
+    setNewId(newId + 1);
     setNewName('');
     setNewNumber('');
   };
 
-  const removePerson = () => {
+  const removePerson = (id) => {
+    const personToDelete = persons.find(person => person.id === id);
+    const confirm = window.confirm(`Delete ${personToDelete.name} ?`);
     
+    if (confirm) {
+      contactService.deleteContact(id)
+      .then(returnedData => {
+        setPersons(persons.filter(person => person.id != returnedData.id));
+      });
+    }
   };
 
   const handleValueChange = (event) => {
@@ -80,7 +96,7 @@ const App = () => {
       <h2>Numbers</h2>
       <DisplayContacts
         persons={persons}
-        filterKeyword={searchValue} 
+        filterKeyword={searchValue}
         removePerson={removePerson}/>
     </div>
   );
