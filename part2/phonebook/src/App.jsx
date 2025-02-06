@@ -15,8 +15,7 @@ const App = () => {
     contactService.getAll()
       .then(initialContacts => {
         setPersons(initialContacts);
-
-        // Get the highest id in the list of contacts for a unique new id
+        // Get the highest id in the list of contacts for a unique new id for a new contact (potential)
         let highestId = initialContacts.reduce((max, contact) => {
           let id = Number(contact.id);
           return (id > max ? id : max)
@@ -28,18 +27,15 @@ const App = () => {
   useEffect(hook, []);
 
   const addPerson = () => {
-
     const personObject = {
       name: newName,
       id: String(newId + 1),
       number: newNumber,
     };
-    
     contactService.create(personObject)
       .then(newPerson => {
         setPersons(persons.concat(newPerson));
       });
-
     setNewId(newId + 1);
     setNewName('');
     setNewNumber('');
@@ -48,7 +44,6 @@ const App = () => {
   const removePerson = (id) => {
     const personToDelete = persons.find(person => person.id === id);
     const confirm = window.confirm(`Delete ${personToDelete.name} ?`);
-    
     if (confirm) {
       contactService.deleteContact(id)
       .then(returnedData => {
@@ -71,9 +66,16 @@ const App = () => {
 
   const validateName = (event) => {
     event.preventDefault();
-    const nameExists = persons.some(person => person.name === newName);
-    if (nameExists) {
-      alert(`${newName} has already been added to the phonebook`);
+    // check if the name already exists in the phonebook
+    const personToUpdate = persons.find(person => person.name === newName);
+    if (personToUpdate) {
+      const confirm = window.confirm(`${newName} has already been added to the phonebook, replace the old number with a new one?`);
+      if (confirm) {
+        contactService.update(personToUpdate.id, { ...personToUpdate, number: newNumber})
+          .then(updatedPerson => {
+            setPersons(persons.map(person => person.id !== updatedPerson.id ? person : updatedPerson));
+          });
+      }
     } else {
       addPerson(event);
     }
