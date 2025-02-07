@@ -3,6 +3,7 @@ import contactService from './services/person';
 import Filter from './components/Filter';
 import DisplayContacts from './components/DisplayContacts';
 import NewContactForm from './components/NewContactForm';
+import Notification from './components/Notification';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -10,6 +11,8 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [newId, setNewId] = useState(0);
+  const [messageContent, setMessageContent] = useState(null);
+  const [messageType, setMessageType] = useState("normal");
 
   const hook = () => {
     contactService.getAll()
@@ -39,6 +42,10 @@ const App = () => {
     setNewId(newId + 1);
     setNewName('');
     setNewNumber('');
+    setMessageContent(`Added ${newName}`);
+    setTimeout(() => {
+      setMessageContent(null);
+    }, 5000);
   };
 
   const removePerson = (id) => {
@@ -48,6 +55,14 @@ const App = () => {
       contactService.deleteContact(id)
       .then(returnedData => {
         setPersons(persons.filter(person => person.id != returnedData.id));
+      }).catch(error => {
+        setMessageType("error");
+        setMessageContent(`Contact for ${personToDelete.name} has already been removed from the server.`);
+        setTimeout(() => {
+          setMessageContent(null);
+          setMessageType("normal");
+        }, 5000);
+        setPersons(persons.filter(person => person.id !== id));
       });
     }
   };
@@ -89,6 +104,7 @@ const App = () => {
         searchValue={searchValue}
         handleValueChange={handleValueChange} />
       <h2>Add a new contact</h2>
+      <Notification message={messageContent} type={messageType} />
       <NewContactForm
         handleNameChange={handleNameChange}
         handleNumberChange={handleNumberChange}
