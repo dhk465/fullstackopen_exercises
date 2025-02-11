@@ -1,27 +1,39 @@
 import { useState, useEffect } from 'react';
 import CountrySearch from './components/CountrySearch';
 import CountryList from './components/CountryList';
-// import { CountryDetails } from './components/CountryDetails';
-import axios from 'axios';
+import CountryDetails from './components/CountryDetails';
+import countryService from './services/countries';
 
 const App = () => {
   const [value, setValue] = useState('');
   const [countries, setCountries] = useState([]);
-  const [countryInfo, setCountryInfo] = useState(null);
+  const [country, setCountry] = useState('');
 
-  const hook = () => {
-    axios
-      .get('https://studies.cs.helsinki.fi/restcountries/api/all')
-      .then(response => {
-        setCountries(response.data);
+  useEffect(() => {
+    countryService.getAll().then(initialCountries => {
+        setCountries(initialCountries);
       });
-  };
+  }, []);
 
-  useEffect(hook, []);
+  useEffect(() => {
+    matchCountry();
+  }, [value, countries]);
+  
+  const matchCountry = () => {
+    const matchedCountries = countries.filter(country =>
+      country.name.common.toLowerCase().includes(value.toLowerCase())
+    );
+
+    if (matchedCountries.length === 1) {
+          setCountry(matchedCountries[0]);
+    } else {
+      setCountry('');
+    }
+  };
 
   const handleChange = (event) => {
     setValue(event.target.value);
-  };
+      };
 
   return (
     <>
@@ -29,7 +41,7 @@ const App = () => {
         value={value}
         handleChange={handleChange} />
       <CountryList countries={countries} value={value} />
-      {/* <CountryDetails countryinfo={countryInfo}/> */}
+{country && <CountryDetails countries={countries} country={country} />}
     </>
   )
 };
