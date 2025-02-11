@@ -11,21 +11,21 @@ const App = () => {
 
   useEffect(() => {
     countryService.getAll().then(initialCountries => {
-        setCountries(initialCountries);
-      });
+      setCountries(initialCountries);
+    });
   }, []);
 
   useEffect(() => {
     matchCountry();
   }, [value, countries]);
-  
+
   const matchCountry = () => {
     const matchedCountries = countries.filter(country =>
       country.name.common.toLowerCase().includes(value.toLowerCase())
     );
 
     if (matchedCountries.length === 1) {
-          setCountry(matchedCountries[0]);
+      setCountry(matchedCountries[0]);
     } else {
       setCountry('');
     }
@@ -33,15 +33,15 @@ const App = () => {
 
   const handleChange = (event) => {
     setValue(event.target.value);
-      };
+  };
 
   return (
     <>
       <CountrySearch
         value={value}
         handleChange={handleChange} />
-      <CountryList countries={countries} value={value} />
-{country && <CountryDetails countries={countries} country={country} />}
+      {country == '' && <CountryList countries={countries} value={value} />}
+      {country && <CountryDetails countries={countries} country={country} />}
     </>
   )
 };
