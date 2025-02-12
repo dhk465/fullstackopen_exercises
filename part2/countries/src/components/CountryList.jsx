@@ -1,6 +1,4 @@
 const CountryList = ({ countries, value, showDetails }) => {
-
-
   return (
     <ul>
       {value === "" ? [] : countries.filter(country => {

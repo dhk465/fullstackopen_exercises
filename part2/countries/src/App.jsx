@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import CountrySearch from './components/CountrySearch';
 import CountryList from './components/CountryList';
 import CountryDetails from './components/CountryDetails';
+import Weather from './components/Weather';
 import countryService from './services/countries';
 
 const App = () => {
