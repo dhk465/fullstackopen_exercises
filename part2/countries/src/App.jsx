@@ -19,6 +19,10 @@ const App = () => {
     matchCountry();
   }, [value, countries]);
 
+  const showDetails = (country) => {
+    setCountry(country);
+  };
+
   const matchCountry = () => {
     const matchedCountries = countries.filter(country =>
       country.name.common.toLowerCase().includes(value.toLowerCase())
@@ -40,7 +44,7 @@ const App = () => {
       <CountrySearch
         value={value}
         handleChange={handleChange} />
-      {country == '' && <CountryList countries={countries} value={value} />}
+      {country == '' && <CountryList countries={countries} value={value} showDetails={showDetails} />}
       {country && <CountryDetails countries={countries} country={country} />}
     </>
   )
