@@ -32,13 +32,16 @@ const Weather = ({ city, country }) => {
   if (!weather) {
     return <p>Loading...</p>;
   }
-
+  
+  const weatherIcon = weather.weather[0].icon;
   const temperature = weather.main.temp;
   const wind = weather.wind.speed;
 
   return (
     <>
+      <h2>Weather in {city}</h2>
       <p>Temperature: {Math.round(((temperature - 273.15) + Number.EPSILON) * 100) / 100} °C </p>
+      <img src={`https://openweathermap.org/img/wn/${weatherIcon}@2x.png`}/>
       <p>Wind: {wind} meter/sec </p>
     </>
   );
