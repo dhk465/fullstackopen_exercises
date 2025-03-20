@@ -29,7 +29,8 @@ const App = () => {
 
   useEffect(hook, []);
 
-  const addPerson = () => {
+  const addPerson = (event) => {
+    event.preventDefault();
     const personObject = {
       name: newName,
       id: String(newId + 1),
@@ -108,7 +109,7 @@ const App = () => {
       <NewContactForm
         handleNameChange={handleNameChange}
         handleNumberChange={handleNumberChange}
-        validateName={addPerson}
+        addPerson={addPerson}
         newNumber={newNumber}
         newName={newName} />
       <h2>Numbers</h2>
