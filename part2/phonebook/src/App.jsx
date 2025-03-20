@@ -29,8 +29,7 @@ const App = () => {
 
   useEffect(hook, []);
 
-  const addPerson = (event) => {
-    event.preventDefault();
+  const addPerson = () => {
     const personObject = {
       name: newName,
       id: String(newId + 1),
@@ -80,22 +79,22 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
-  // const validateName = (event) => {
-  //   event.preventDefault();
-  //   // check if the name already exists in the phonebook
-  //   const personToUpdate = persons.find(person => person.name === newName);
-  //   if (personToUpdate) {
-  //     const confirm = window.confirm(`${newName} has already been added to the phonebook, replace the old number with a new one?`);
-  //     if (confirm) {
-  //       contactService.update(personToUpdate.id, { ...personToUpdate, number: newNumber})
-  //         .then(updatedPerson => {
-  //           setPersons(persons.map(person => person.id !== updatedPerson.id ? person : updatedPerson));
-  //         });
-  //     }
-  //   } else {
-  //     addPerson(event);
-  //   }
-  // };
+  const validateName = (event) => {
+    event.preventDefault();
+    // check if the name already exists in the phonebook
+    const personToUpdate = persons.find(person => person.name === newName);
+    if (personToUpdate) {
+      const confirm = window.confirm(`${newName} has already been added to the phonebook, replace the old number with a new one?`);
+      if (confirm) {
+        contactService.update(personToUpdate.id, { ...personToUpdate, number: newNumber})
+          .then(updatedPerson => {
+            setPersons(persons.map(person => person.id !== updatedPerson.id ? person : updatedPerson));
+          });
+      }
+    } else {
+      addPerson(event);
+    }
+  };
 
   return (
     <div>
@@ -109,7 +108,7 @@ const App = () => {
       <NewContactForm
         handleNameChange={handleNameChange}
         handleNumberChange={handleNumberChange}
-        addPerson={addPerson}
+        validateName={validateName}
         newNumber={newNumber}
         newName={newName} />
       <h2>Numbers</h2>
