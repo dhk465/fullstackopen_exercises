@@ -28,6 +28,15 @@ const App = () => {
 
   useEffect(hook, []);
 
+  const errorMessage = (error) => {
+    setMessageType("error");
+    setMessageContent(error.response.data.error);
+    setTimeout(() => {
+      setMessageContent(null);
+      setMessageType("normal");
+    }, 10000);
+  };
+
   const addPerson = () => {
     const personObject = {
       name: newName,
@@ -47,12 +56,7 @@ const App = () => {
         }, 5000);
       })
       .catch((error) => {
-        setMessageType("error");
-        setMessageContent(error.response.data.error);
-        setTimeout(() => {
-          setMessageContent(null);
-          setMessageType("normal");
-        }, 5000);
+        errorMessage(error);
       });
   };
 
@@ -66,14 +70,7 @@ const App = () => {
           setPersons(persons.filter((person) => person.id != returnedData.id));
         })
         .catch((error) => {
-          setMessageType("error");
-          setMessageContent(
-            `Contact for ${personToDelete.name} has already been removed from the server.`
-          );
-          setTimeout(() => {
-            setMessageContent(null);
-            setMessageType("normal");
-          }, 5000);
+          errorMessage(error);
           setPersons(persons.filter((person) => person.id !== id));
         });
     }
